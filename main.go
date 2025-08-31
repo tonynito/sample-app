@@ -28,6 +28,7 @@ func main() {
 	http.HandleFunc("/blue", blueHandler)
 	http.HandleFunc("/red", redHandler)
 	http.HandleFunc("/purple", purpleHandler)
+	http.HandleFunc("/green", greenHandler)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -46,20 +47,39 @@ func redHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func purpleHandler(w http.ResponseWriter, r *http.Request) {
-    // Create a 100x100 RGBA image
-    img := image.NewRGBA(image.Rect(0, 0, 100, 100))
+	// Create a 100x100 RGBA image
+	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
 
-    // Define a purple color: Red + Blue = Purple
-    purple := color.RGBA{128, 0, 128, 255} // RGB(128, 0, 128)
-    
-    // Fill the image with purple
-    draw.Draw(img, img.Bounds(), &image.Uniform{purple}, image.Point{}, draw.Src)
+	// Define a purple color: Red + Blue = Purple
+	purple := color.RGBA{128, 0, 128, 255} // RGB(128, 0, 128)
 
-    // Set the content type to PNG
-    w.Header().Set("Content-Type", "image/png")
+	// Fill the image with purple
+	draw.Draw(img, img.Bounds(), &image.Uniform{purple}, image.Point{}, draw.Src)
 
-    // Encode the image as PNG
-    if err := png.Encode(w, img); err != nil {
-        http.Error(w, "Failed to encode image", http.StatusInternalServerError)
-    }
+	// Set the content type to PNG
+	w.Header().Set("Content-Type", "image/png")
+
+	// Encode the image as PNG
+	if err := png.Encode(w, img); err != nil {
+		http.Error(w, "Failed to encode image", http.StatusInternalServerError)
+	}
+}
+
+func greenHandler(w http.ResponseWriter, r *http.Request) {
+	// Create a 100x100 RGBA image
+	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
+
+	// Define green color: RGB(0, 255, 0)
+	green := color.RGBA{0, 255, 0, 255}
+
+	// Fill the image with green
+	draw.Draw(img, img.Bounds(), &image.Uniform{green}, image.Point{}, draw.Src)
+
+	// Set the content type to PNG
+	w.Header().Set("Content-Type", "image/png")
+
+	// Encode the image to the response
+	if err := png.Encode(w, img); err != nil {
+		http.Error(w, "Failed to encode image", http.StatusInternalServerError)
+	}
 }
