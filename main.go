@@ -25,21 +25,39 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/blue", blueHandler)
+	//http.HandleFunc("/blue", blueHandler)
+	http.HandleFunc("/green", greenHandler)
 	http.HandleFunc("/red", redHandler)
 	http.ListenAndServe(":8080", nil)
 }
 
-func blueHandler(w http.ResponseWriter, r *http.Request) {
-	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
-	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{0, 0, 255, 255}}, image.ZP, draw.Src)
-	w.Header().Set("Content-Type", "image/png")
-	png.Encode(w, img)
-}
+//func blueHandler(w http.ResponseWriter, r *http.Request) {
+	//img := image.NewRGBA(image.Rect(0, 0, 100, 100))
+	//draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{0, 0, 255, 255}}, image.ZP, draw.Src)
+	//w.Header().Set("Content-Type", "image/png")
+	//png.Encode(w, img)
+//}
 
 func redHandler(w http.ResponseWriter, r *http.Request) {
 	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
 	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{255, 0, 0, 255}}, image.ZP, draw.Src)
 	w.Header().Set("Content-Type", "image/png")
 	png.Encode(w, img)
+}
+
+func greenHandler(w http.ResponseWriter, r *http.Request) {
+	// Create a new RGBA image (100x100 pixels)
+	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
+
+	// Fill the image with green color (RGB: 0, 255, 0)
+	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{0, 255, 0, 255}}, image.Point{}, draw.Src)
+
+	// Set the Content-Type header to image/png
+	w.Header().Set("Content-Type", "image/png")
+
+	// Encode the image and write it to the response writer
+	if err := png.Encode(w, img); err != nil {
+		http.Error(w, "Failed to encode image", http.StatusInternalServerError)
+		return
+	}
 }
