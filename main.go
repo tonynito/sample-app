@@ -25,21 +25,38 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/blue", blueHandler)
-	http.HandleFunc("/red", redHandler)
+	// http.HandleFunc("/blue", blueHandler)
+	// http.HandleFunc("/red", redHandler)
 	http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/yellow", yellowHandler)
 }
 
-func blueHandler(w http.ResponseWriter, r *http.Request) {
-	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
-	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{0, 0, 255, 255}}, image.ZP, draw.Src)
-	w.Header().Set("Content-Type", "image/png")
-	png.Encode(w, img)
-}
+// func blueHandler(w http.ResponseWriter, r *http.Request) {
+//	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
+//	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{0, 0, 255, 255}}, image.ZP, draw.Src)
+//	w.Header().Set("Content-Type", "image/png")
+//	png.Encode(w, img)
+// }
 
-func redHandler(w http.ResponseWriter, r *http.Request) {
+// func redHandler(w http.ResponseWriter, r *http.Request) {
+//	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
+//	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{255, 0, 0, 255}}, image.ZP, draw.Src)
+//	w.Header().Set("Content-Type", "image/png")
+//	png.Encode(w, img)
+// }
+
+func yellowHandler(w http.ResponseWriter, r *http.Request) {
 	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
-	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{255, 0, 0, 255}}, image.ZP, draw.Src)
+	draw.Draw(
+		img,
+		img.Bounds(),
+		&image.Uniform{color.RGBA{255, 255, 0, 255}}, // yellow
+		image.ZP,
+		draw.Src,
+	)
+
 	w.Header().Set("Content-Type", "image/png")
-	png.Encode(w, img)
+	if err := png.Encode(w, img); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
