@@ -27,6 +27,7 @@ import (
 func main() {
 	http.HandleFunc("/blue", blueHandler)
 	http.HandleFunc("/red", redHandler)
+	http.HandleFunc("/purple", purpleHandler)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -42,4 +43,16 @@ func redHandler(w http.ResponseWriter, r *http.Request) {
 	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{255, 0, 0, 255}}, image.ZP, draw.Src)
 	w.Header().Set("Content-Type", "image/png")
 	png.Encode(w, img)
+}
+
+func purpleHandler(w http.ResponseWriter, r *http.Request) {
+	img := image.NewRGBA(image.Rect(0, 0, 100, 100))
+	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{128, 0, 128, 255}}, image.ZP, draw.Src)
+
+	w.Header().Set("Content-Type", "image/png")
+
+	// Attempt to encode the image to the response writer.
+	if err := png.Encode(w, img); err != nil {
+		http.Error(w, "Unable to generate image", http.StatusInternalServerError)
+	}
 }
